@@ -1,0 +1,33 @@
+package hello.core.lifecycle;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+public class BeanLifeCycleTest {
+
+    @Test
+    public void lifeCycleTest() {
+        ConfigurableApplicationContext ac = new AnnotationConfigApplicationContext(LifeCycleConfig.class);
+        NetworkClient client = ac.getBean(NetworkClient.class);
+        ac.close();
+        //close 호출 중요 context 닫기
+        //기본 ApplicationContext에서 제공해주지 않음
+        //직접 인터페이스 갖다 쓸 때 close할 일이 별로 없다
+    }
+
+    @Configuration
+    static class LifeCycleConfig {
+        @Bean
+        public NetworkClient networkClient() {
+            NetworkClient networkClient = new NetworkClient();
+            networkClient.setUrl("http://hello-spring.dev");
+            return networkClient;
+        }
+    }
+
+}
